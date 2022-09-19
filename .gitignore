@@ -1,0 +1,11 @@
+/.idea
+/.nyc_output
+/node_modules
+/coverage
+/dist
+/types
+/test/store
+.DS_Store
+
+!/**/.gitkeep
+package-lock.json
