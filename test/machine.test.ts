@@ -1,7 +1,7 @@
 import machine from '../src/machine';
 import assert from 'assert';
 
-describe('fdta', () => {
+describe('fdex', () => {
     describe('machine', () => {
         it('should process input', () => {
             const input = 'foobar';
