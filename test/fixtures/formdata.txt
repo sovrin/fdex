@@ -1,0 +1,10 @@
+------upload
+Content-Disposition: form-data; name="foo"
+
+bar
+------upload
+Content-Disposition: form-data; name="json"; filename="foobar.json"
+Content-Type: application/json
+
+{"foo":"bar"}
+------upload--
