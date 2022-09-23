@@ -4,9 +4,10 @@
   "description": "small form-data extractor",
   "main": "dist/index.js",
   "scripts": {
-    "coverage": "nyc npm test",
+    "build": "tsc --project tsconfig.prod.json",
+    "watch": "tsc --watch",
     "test": "mocha -r ts-node/register/transpile-only --full-trace 'test/**/*.ts'",
-    "test:watch": "mocha -w"
+    "coverage": "nyc npm test"
   },
   "author": {
     "name": "Oleg Kamlowski",
