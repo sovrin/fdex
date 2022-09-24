@@ -30,7 +30,7 @@ export const load = (file: string, bufferSize: number): Readable => {
  * @param entries
  */
 export const upload = (entries?: [string, string][]): [string, Readable, string[]] => {
-    const form = new FormData({highWaterMark: 8, dataSize: 8, maxDataSize: 8, objectMode: true});
+    const form = new FormData();
     const paths = [];
 
     for (let [name, value] of entries) {
