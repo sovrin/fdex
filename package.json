@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "small form-data extractor",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "types"
+  ],
   "scripts": {
     "build": "tsc --project tsconfig.prod.json",
     "watch": "tsc --watch",
@@ -14,7 +18,7 @@
     "email": "oleg.kamlowski@thomann.de",
     "url": "https://thomann.de"
   },
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^9.1.1",
     "@types/node": "^17.0.23",
