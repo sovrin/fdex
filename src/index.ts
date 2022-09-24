@@ -1,6 +1,6 @@
-import queueFactory from './queue';
 import {Transform, TransformCallback} from 'stream';
-import {fdex, Queue} from './types';
+import queueFactory from './queue';
+import type {fdex, Queue} from './types';
 
 const Char = {
     BOUNDARY: 45,
@@ -46,7 +46,7 @@ const factory: fdex = (name: string) => {
      *
      * @param queue
      */
-    const read = (queue: Queue) => {
+    const read = (queue: Queue): Buffer[] => {
         if (!queue.until(boundary)) {
             return;
         }
@@ -136,8 +136,27 @@ const factory: fdex = (name: string) => {
 };
 
 /**
+ *
+ * @param contentType
+ */
+const getBoundary = (contentType: string): string => {
+    if (!contentType.match(/multipart\/form-data/i)) {
+        return null;
+    }
+
+    const match = contentType.match(/boundary=--[-?]*(\w+);?/);
+    if (!match) {
+        return null;
+    }
+
+    return match.pop();
+};
+
+/**
  * User: Oleg Kamlowski <oleg.kamlowski@thomann.de>
  * Date: 23.09.22
  * Time: 19:56
  */
 export default factory;
+export {getBoundary};
+export type {fdex};
