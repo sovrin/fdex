@@ -29,6 +29,7 @@
     "url": "https://github.com/sovrin/fdex.git"
   },
   "keywords": [
+    "multipart",
     "form-data"
   ]
 }
