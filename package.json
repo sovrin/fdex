@@ -1,8 +1,11 @@
 {
   "name": "fdex",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "small form-data extractor",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "types": "./types/index.d.ts",
+  "type": "commonjs",
   "files": [
     "dist",
     "types"
