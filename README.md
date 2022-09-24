@@ -8,7 +8,7 @@
 [![dependencies][dep-src]][dep-href]
 [![License][license-src]][license-href]
 
-> form-data extractor
+> small form-data extractor
 
 ## Installation
 
@@ -19,9 +19,31 @@ $ npm i fdex
 ## Usage
 
 ```js
-import fdex from 'fdex';
+import fdex, {getBoundary} from 'fdex';
+import express from 'express';
 
+const app = express();
+
+app.post('/', (req) => {
+    const contentType = req.headers['content-type'];
+    const boundary = getBoundary(contentType);
+
+    const extractor = fdex(boundary);
+    req.pipe(extractor)
+        .on('data', ([headers, body]) => {
+            console.info(headers, body);
+        })
+    ;
+});
+
+app.listen(3000);
 ```
+
+## About
+
+Jet another `multipart/form-data` extractor/processor.
+This projects aim was to understand and process the `multipart/form-data` format without any
+additional dependencies.
 
 ## Licence
 
