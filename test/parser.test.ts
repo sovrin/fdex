@@ -1,8 +1,23 @@
 import assert from 'assert';
 import {compare, load, upload} from './utils';
-import parser from '../src';
+import parser, {getBoundary} from '../src';
 
 describe('fdex', () => {
+    describe('getBoundary', () => {
+        it('should return boundary', () => {
+            assert(getBoundary('multipart/form-data; boundary=----------879925882887327343332028') === '879925882887327343332028');
+            assert(getBoundary('multipart/form-data; boundary=--------------------------879925882887327343332028, foo=bar') === '879925882887327343332028');
+            assert(getBoundary('multipart/form-data; boundary=-------foobar') === 'foobar');
+            assert(getBoundary('multipart/form-data; fizz=buzz boundary=-------foobar') === 'foobar');
+        });
+
+        it('should return null', () => {
+            assert(getBoundary('multipart/foo; boundary=-------foobar') === null);
+            assert(getBoundary('foo; boundary=-------foobar') === null);
+            assert(getBoundary('multipart/form-data; boundary=foobar') === null);
+        });
+    });
+
     describe('parser', () => {
         describe('via file', () => {
             it('should parse nothing with wrong boundary', (done) => {
