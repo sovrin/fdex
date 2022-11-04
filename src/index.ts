@@ -47,11 +47,15 @@ const factory: fdex = (name: string) => {
      * @param queue
      */
     const read = (queue: Queue): Buffer[] => {
-        if (!queue.until(boundary)) {
-            return;
+        if (!landmark) {
+            if (!queue.until(boundary)) {
+                return null;
+            }
         }
 
-        landmark = queue.slice(0);
+        if (!landmark) {
+            landmark = queue.slice(0);
+        }
 
         if (!start) {
             start = Buffer.concat([
@@ -71,7 +75,7 @@ const factory: fdex = (name: string) => {
             return data;
         }
 
-        return data;
+        return null;
     };
 
     /**
