@@ -29,7 +29,8 @@ describe('fdex', () => {
                     .on('end', () => {
                         assert(parsed === false);
                         done();
-                    });
+                    })
+                ;
             });
 
             describe('with tiny buffer', () => {
@@ -42,7 +43,8 @@ describe('fdex', () => {
 
                             assert(body.toString() === 'Joe owes =E2=82=AC100.');
                         })
-                        .on('end', done);
+                        .on('end', done)
+                    ;
                 });
             });
 
@@ -56,8 +58,49 @@ describe('fdex', () => {
 
                             assert(body.toString() === 'Joe owes =E2=82=AC100.');
                         })
-                        .on('end', done);
+                        .on('end', done)
+                    ;
                 });
+            });
+
+            describe('with several buffer sizes buffer', () => {
+                it('should parse formdata', (done) => {
+                    let tested = false;
+                    load('test/fixtures/formdata.txt', 1024).pipe(parser('upload'))
+                        .on('data', ([headers, body]) => {
+                            assert(typeof headers['Content-Disposition'] === 'string');
+                            assert(body.toString().length > 0);
+                            tested = true;
+                        })
+                        .on('end', (e) => {
+                            assert(tested);
+                            done(e);
+                        })
+                    ;
+                });
+
+                for (let i = 4; i <= 200; i += 4) {
+                    it('should parse form with buffersize: ' + i, (done) => {
+                        const expected = [
+                            ['form-data; name="foo"', 'bar'],
+                            ['form-data; name="json"; filename="foobar.json"', '{"foo":"bar"}'],
+                        ];
+                        let tested = false;
+                        load('test/fixtures/formdata.txt', i).pipe(parser('upload'))
+                            .on('data', ([headers, body]) => {
+                                const [h, b] = expected.shift();
+
+                                assert(headers['Content-Disposition'] === h);
+                                assert(body.toString() === b);
+                                tested = true;
+                            })
+                            .on('end', (e) => {
+                                assert(tested);
+                                done(e);
+                            })
+                        ;
+                    });
+                }
             });
         });
 
@@ -73,7 +116,8 @@ describe('fdex', () => {
                     .on('end', () => {
                         assert(parsed === false);
                         done();
-                    });
+                    })
+                ;
             });
 
             it('should parse text file with kind of random text', (done) => {
@@ -85,7 +129,8 @@ describe('fdex', () => {
                         assert(headers['Content-Type'] === 'application/octet-stream');
                         assert(compare(path, body));
                     })
-                    .on('end', done);
+                    .on('end', done)
+                ;
             });
 
             it('should parse text file with formdata', (done) => {
@@ -97,7 +142,8 @@ describe('fdex', () => {
                         assert(headers['Content-Type'] === 'application/octet-stream');
                         assert(compare(path, body));
                     })
-                    .on('end', done);
+                    .on('end', done)
+                ;
             });
 
             it('should parse single binary', (done) => {
@@ -109,7 +155,8 @@ describe('fdex', () => {
                         assert(headers['Content-Type'] === 'application/octet-stream');
                         assert(compare(path, body));
                     })
-                    .on('end', done);
+                    .on('end', done)
+                ;
             });
 
             it('should parse several binaries', (done) => {
@@ -145,7 +192,8 @@ describe('fdex', () => {
                         assert(headers[type[0]] === type[1]);
                         assert(compare(path[0], body));
                     })
-                    .on('end', done);
+                    .on('end', done)
+                ;
             });
         });
 
