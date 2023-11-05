@@ -19,6 +19,19 @@ describe('fdex', () => {
     });
 
     describe('parser', () => {
+        describe('use config', () => {
+            it('should should exceed file limit and throw exception', (done) => {
+                const [boundary, stream] = upload([['formdata', 'test/fixtures/formdata.txt']]);
+
+                stream.pipe(parser(boundary, {limit: 16}))
+                    .on('error', (e) => {
+                        assert(e.message === 'limit of 16 bytes exceeded');
+                        done();
+                    })
+                ;
+            });
+        });
+
         describe('via file', () => {
             it('should parse nothing with wrong boundary', (done) => {
                 let parsed = false;
