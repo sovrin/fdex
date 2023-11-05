@@ -1,6 +1,6 @@
 import {Transform, TransformCallback} from 'stream';
 import queueFactory from './queue';
-import type {fdex, Queue} from './types';
+import type {Config, fdex, Queue} from './types';
 
 const Char = {
     BOUNDARY: 45,
@@ -30,8 +30,10 @@ const SEPARATOR = new Uint8Array([
 /**
  *
  * @param name
+ * @param config
  */
-const factory: fdex = (name: string) => {
+const factory: fdex = (name: string, config?: Config) => {
+    let length = 0;
     const queue = queueFactory();
     const boundary = new Uint8Array(('--' + name)
         .split('')
@@ -39,7 +41,7 @@ const factory: fdex = (name: string) => {
     );
     const data: Buffer[] = [];
     let landmark: Buffer;
-    let start;
+    let start: Buffer;
     const end = Buffer.from(TAIL);
 
     /**
@@ -83,7 +85,7 @@ const factory: fdex = (name: string) => {
      * @param blocks
      * @param push
      */
-    const extract = (blocks: Buffer[], push): void => {
+    const extract = (blocks: Buffer[], push: typeof Array.prototype.push): void => {
         for (const block of blocks) {
             const queue = queueFactory();
             queue.concat(block);
@@ -122,7 +124,14 @@ const factory: fdex = (name: string) => {
      * @param encoding
      * @param callback
      */
-    function transform(chunk: Buffer, encoding, callback: TransformCallback): void {
+    function transform(chunk: Buffer, encoding: BufferEncoding, callback: TransformCallback): void {
+        length += chunk.length;
+        if (config?.limit && length > config.limit) {
+            callback(new Error(`limit of ${config.limit} bytes exceeded`));
+
+            return;
+        }
+
         queue.concat(chunk);
 
         const blocks = read(queue);
